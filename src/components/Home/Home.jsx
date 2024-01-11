@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react"
-
+import React, { Suspense, useEffect, useState } from "react"
 import GameContainer from "../GameContainer"
+import { useGameData } from "../../contexts/GameDataContext"
 
 const Home = () => {
-  const [gameData, setGameData] = useState([])
+  const { gameData, updateGameData } = useGameData()
   const apiUrl = "https://api.rawg.io/api/games"
   const apiKey = import.meta.env.VITE_API_KEY
 
@@ -11,21 +11,39 @@ const Home = () => {
     fetch(`${apiUrl}?key=${apiKey}`)
       .then((response) => response.json())
       .then((data) => {
-        setGameData(data.results)
-        console.log(data.results)
+        updateGameData(data.results)
       })
       .catch((error) => {
         console.error("Error fetching data:", error)
       })
   }
 
+  console.log("render home")
+
+  // useEffect(() => {
+  //   if (gameData.length == 0) {
+  //     getData()
+
+  //     console.log("useeffect runnning from home")
+  //   }
+  // }, [])
+
   useEffect(() => {
-    getData()
-  }, [])
+    const fetchData = async () => {
+      if (gameData.length === 0) {
+        await getData()
+        console.log("useEffect running from Home")
+      }
+    }
+
+    fetchData()
+  }, [gameData])
 
   return (
     <div>
-      <GameContainer gameData={gameData} />
+      <Suspense fallback={<div className="bg-white">loading..</div>}>
+        {gameData.length > 0 && <GameContainer />}
+      </Suspense>
     </div>
   )
 }

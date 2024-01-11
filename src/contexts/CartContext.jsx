@@ -13,12 +13,19 @@ export const CartProvider = ({ children }) => {
     setCartItems((prevItems) => [...prevItems, { ...item }])
   }
 
+  const removeFromCart = (item) => {
+    const isItemInCart = cartItems.find((cartItem) => cartItem.id === item.id)
+    setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id))
+  }
+
   const getCartTotal = () => {
     return cartItems.reduce((total, item) => total + Number(item.price), 0)
   }
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, getCartTotal }}>
+    <CartContext.Provider
+      value={{ cartItems, addToCart, removeFromCart, getCartTotal }}
+    >
       {children}
     </CartContext.Provider>
   )
