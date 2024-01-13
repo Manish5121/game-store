@@ -2,17 +2,22 @@ import React, { useContext, useEffect, useState } from "react"
 import { useCart } from "../contexts/CartContext"
 
 const GameCard = ({ game, onAddToCart }) => {
-  const { addToCart } = useCart()
+  const { addToCart, removeFromCart } = useCart()
 
   const handleClick = () => {
-    addToCart({
-      id: game.id,
-      name: game.name,
-      src: game.background_image,
-      price: game.price,
-    })
+    if (game.isAdded) {
+      removeFromCart(game)
+      onAddToCart(game.id, false)
+    } else {
+      addToCart({
+        id: game.id,
+        name: game.name,
+        src: game.background_image,
+        price: game.price,
+      })
 
-    onAddToCart()
+      onAddToCart(game.id, true)
+    }
   }
 
   return (

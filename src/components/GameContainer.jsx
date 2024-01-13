@@ -2,41 +2,42 @@ import React, { useEffect, useMemo, useState } from "react"
 import GameCard from "./GameCard"
 import { useSearch } from "../contexts/SearchContext"
 import { useGameData } from "../contexts/GameDataContext"
+import getData from "../api/api"
 
 const GameContainer = React.memo(() => {
   const { gameData, updateGameData } = useGameData()
   const { searchQuery } = useSearch()
 
-  const handleAddToCart = (gameId) => {
+  const handleAddToCart = (gameId, isAdded) => {
     const updatedGameData = gameData.map((game) =>
-      game.id === gameId ? { ...game, isAdded: true } : game
+      game.id === gameId ? { ...game, isAdded: isAdded } : game
     )
 
     updateGameData(updatedGameData)
   }
-  const generateRandomPrice = () => {
-    const minPrice = 10
-    const maxPrice = 60
-    return (Math.random() * (maxPrice - minPrice) + minPrice).toFixed(2)
-  }
+  // const generateRandomPrice = () => {
+  //   const minPrice = 10
+  //   const maxPrice = 60
+  //   return (Math.random() * (maxPrice - minPrice) + minPrice).toFixed(2)
+  // }
 
-  const addDummyPrices = useMemo(() => {
-    return (games) => {
-      return games.map((game) => ({
-        ...game,
-        price: generateRandomPrice(),
-      }))
-    }
-  }, [])
+  // const addDummyPrices = useMemo(() => {
+  //   return (games) => {
+  //     return games.map((game) => ({
+  //       ...game,
+  //       price: generateRandomPrice(),
+  //     }))
+  //   }
+  // }, [])
 
-  useEffect(() => {
-    console.log("useE inside container")
+  // useEffect(() => {
+  //   console.log("useE inside container")
 
-    if (gameData.length > 0) {
-      const gamesWithPrices = addDummyPrices(gameData)
-      updateGameData(gamesWithPrices)
-    }
-  }, []) // Include addDummyPrices in the dependency array
+  //   if (gameData.length > 0) {
+  //     const gamesWithPrices = addDummyPrices(gameData)
+  //     updateGameData(gamesWithPrices)
+  //   }
+  // }, []) // Include addDummyPrices in the dependency array
 
   const filteredGames = useMemo(() => {
     return gameData.filter((game) =>
@@ -55,7 +56,9 @@ const GameContainer = React.memo(() => {
             <GameCard
               key={game.id}
               game={game}
-              onAddToCart={() => handleAddToCart(game.id)}
+              onAddToCart={(gameId, isAdded) =>
+                handleAddToCart(gameId, isAdded)
+              }
             />
           ))}
       </div>

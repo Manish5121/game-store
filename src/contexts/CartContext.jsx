@@ -19,7 +19,11 @@ export const CartProvider = ({ children }) => {
   }
 
   const getCartTotal = () => {
-    return cartItems.reduce((total, item) => total + Number(item.price), 0)
+    const total = cartItems.reduce(
+      (total, item) => Math.floor(total + Number(item.price)),
+      0
+    )
+    return total.toFixed(2)
   }
 
   return (

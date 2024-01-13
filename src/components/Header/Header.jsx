@@ -1,7 +1,8 @@
 import React from "react"
 import { NavLink, Link } from "react-router-dom"
-import { ShoppingCart } from "lucide-react"
+import { ShoppingCart, SearchIcon } from "lucide-react"
 import { useSearch } from "../../contexts/SearchContext"
+import { UserButton } from "@clerk/clerk-react"
 
 const Header = () => {
   const { searchQuery, updateSearchQuery } = useSearch()
@@ -54,13 +55,17 @@ const Header = () => {
           </div>
 
           <div className="flex items-center lg:order-2">
-            <div className="text-gray-800  focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none">
+            <div className="text-gray-800  relative focus:ring-4 focus:ring-gray-300 font-medium text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none">
+              <div className="absolute inset-y-0 left-5 w-8 flex items-center pl-3">
+                <SearchIcon />
+              </div>
+
               <input
                 type="text"
                 placeholder="search store"
                 value={searchQuery}
                 onChange={handleInputChange}
-                className="px-4 py-2 rounded-lg hover:ring-zinc-800"
+                className="pl-10 py-2 rounded-full hover:ring-zinc-800"
               />
             </div>
             <Link
@@ -69,6 +74,10 @@ const Header = () => {
             >
               <ShoppingCart />
             </Link>
+
+            <div>
+              <UserButton />
+            </div>
           </div>
         </div>
       </nav>
